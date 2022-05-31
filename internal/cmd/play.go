@@ -37,9 +37,9 @@ func NewPlayCmd() *cobra.Command {
 
 	playCmd.Flags().IntVar(&opt.DoorCount, "doors", defaultDoorCount, "Set doors to the number of doors.")
 	playCmd.Flags().IntVar(&opt.TryCount, "try-count", defaultTryCount, "Set n to the number of games you want to verify.")
-	playCmd.Flags().BoolVar(&opt.WillChange, "change", defaultWillChange, "change determines whether the challenger changes doors midway.")
+	playCmd.Flags().BoolVar(&opt.WillChange, "change", defaultWillChange, "Change determines whether the challenger changes doors midway.")
 
-	playCmd.Flags().BoolVar(&opt.DetailMode, "detail", defaultDetailMode, "output work details")
+	playCmd.Flags().BoolVar(&opt.DetailMode, "detail", defaultDetailMode, "Output work details")
 
 	return playCmd
 }

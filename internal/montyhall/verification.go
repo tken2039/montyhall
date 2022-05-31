@@ -109,7 +109,7 @@ func (v *Verification) showPreferences() {
 	if v.willChange {
 		doorChange = "yes"
 	}
-	fmt.Printf("Changes after Monty Hall opened the door: %v\n", doorChange)
+	fmt.Printf("Changes after Monty opened the door: %v\n", doorChange)
 
 	fmt.Println("---------------")
 }
