@@ -60,7 +60,11 @@ func (v *Verification) startVerification() {
 		go func() {
 			defer wg.Done()
 
-			v.verify(tryCount, workerNum+1)
+			err := v.verify(tryCount, workerNum+1)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 		}()
 	}
 
@@ -73,12 +77,15 @@ func (v *Verification) startVerification() {
 	v.showResults()
 }
 
-func (v *Verification) verify(tryCount int, workerNum int) {
+func (v *Verification) verify(tryCount int, workerNum int) error {
 	scenario := NewScenario(v)
 	var hitCount int
 
 	for i := 0; i < tryCount-1; i++ {
-		isHit := scenario.playMontyHall()
+		isHit, err := scenario.playMontyHall()
+		if err != nil {
+			return err
+		}
 
 		if isHit {
 			hitCount += 1
@@ -90,6 +97,8 @@ func (v *Verification) verify(tryCount int, workerNum int) {
 	}
 
 	v.addHitCount(hitCount)
+
+	return nil
 }
 
 func (v *Verification) addHitCount(hitCount int) {

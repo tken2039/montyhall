@@ -20,9 +20,8 @@ func NewScenario(v *Verification) *Scenario {
 }
 
 type doors struct {
-	doorCount  int
-	correct    int
-	doorStatus []bool
+	doorCount int
+	correct   int
 }
 
 func NewDoors(doorCount int) *doors {
@@ -34,17 +33,24 @@ func NewDoors(doorCount int) *doors {
 	return d
 }
 
-func (sc *Scenario) playMontyHall() bool {
+func (sc *Scenario) playMontyHall() (bool, error) {
 	// player selects one door
-	sc.selectDoor()
+
+	if err := sc.selectDoor(); err != nil {
+		return false, err
+	}
 
 	// monty opens one door other than the door selected by player
-	sc.openDoor()
+	if err := sc.openDoor(); err != nil {
+		return false, err
+	}
 
 	// player can re-select the door
 	if sc.challenger.willChange {
 		// re-select
-		sc.reSelectDoor()
+		if err := sc.reSelectDoor(); err != nil {
+			return false, err
+		}
 	} else {
 		// unchange from before-selected
 		sc.door.afterSelected = sc.door.beforeSelected
@@ -53,23 +59,38 @@ func (sc *Scenario) playMontyHall() bool {
 	// The result of opening the door was...
 	isHit := isHit(sc.door.correct, sc.door.afterSelected)
 
-	return isHit
+	return isHit, nil
 }
 
-func (sc *Scenario) selectDoor() {
-	selected := sc.challenger.selectDoor(sc.door.count)
+func (sc *Scenario) selectDoor() error {
+	selected, err := sc.challenger.selectDoor(sc.door.count)
+	if err != nil {
+		return err
+	}
 
 	sc.door.beforeSelected = selected
+
+	return nil
 }
 
-func (sc *Scenario) reSelectDoor() {
-	selected := sc.challenger.selectDoor(sc.door.count, sc.door.beforeSelected, sc.door.opend)
+func (sc *Scenario) reSelectDoor() error {
+	selected, err := sc.challenger.selectDoor(sc.door.count, sc.door.beforeSelected, sc.door.opend)
+	if err != nil {
+		return err
+	}
 
 	sc.door.afterSelected = selected
+
+	return nil
 }
 
-func (sc *Scenario) openDoor() {
-	sc.door.openDoor()
+func (sc *Scenario) openDoor() error {
+	err := sc.door.openDoor()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func isHit(correct int, selected int) bool {

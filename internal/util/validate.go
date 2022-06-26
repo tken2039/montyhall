@@ -16,20 +16,18 @@ func ValidateParams(p interface{}) error {
 }
 
 func extractValidationErrors(err error) error {
-
 	if err != nil {
 		var errorText []string
 		for _, err := range err.(validator.ValidationErrors) {
 			errorText = append(errorText, validationErrorToText(err))
 		}
-		return fmt.Errorf("\nParameter error: %s\n", strings.Join(errorText, "\n"))
+		return fmt.Errorf("\nParameter error: %v\n", strings.Join(errorText, "\n"))
 	}
 
 	return nil
 }
 
 func validationErrorToText(e validator.FieldError) string {
-
 	f := e.Field()
 	switch e.Tag() {
 	case "required":

@@ -1,6 +1,8 @@
 package montyhall
 
 import (
+	"fmt"
+
 	"github.com/tken2039/montyhall/internal/util"
 )
 
@@ -26,13 +28,17 @@ func NewDoor(d int) *Door {
 	return door
 }
 
-func (d *Door) openDoor() {
+func (d *Door) openDoor() error {
 	isValid := false
 	target := 0
+
+	if d.count < 3 {
+		return fmt.Errorf("the number of doors must be at least 3. given door count: %v", d.count)
+	}
+
+	untouchableDoors := []int{d.correct, d.beforeSelected}
 	for !isValid {
 		target = util.GenerateRandomNumber(d.count) + 1
-
-		untouchableDoors := []int{d.correct, d.beforeSelected}
 
 		isExist := false
 		for _, v := range untouchableDoors {
@@ -48,4 +54,6 @@ func (d *Door) openDoor() {
 	}
 
 	d.opend = target
+
+	return nil
 }
